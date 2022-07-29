@@ -1,0 +1,14 @@
+[Unit]
+Description=Tracking workspaces
+Documentation=https://example.com
+After=network.target
+
+[Service]
+Environment=NODE_PORT=3001
+Type=simple
+User=peter
+ExecStart=/usr/bin/node /home/peter/Me/workspace-tracker/dist/index.js
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
