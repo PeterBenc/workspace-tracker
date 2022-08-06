@@ -17,6 +17,7 @@ export const getCurrentWorkspace = (): WorkspaceLog => {
     time: Math.round(Date.now() / 1000).toString(),
     workspaceName: `${
       workspaceNames.find((wk, i) => i === workspaceIndex) || "Unknown"
-    }\n`,
+    }`,
   };
 };
+2;
