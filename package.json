@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev:logging": "npx tsc && node dist/index.js",
-    "parse:logs": "npx tsc && node dist/parse/index.js"
+    "parse:logs": "npx tsc && node dist/parse/index.js",
+    "calendar": "yarn parse:logs && cd src/calendar && yarn dev"
   },
   "keywords": [],
   "author": "",
