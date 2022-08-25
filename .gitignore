@@ -1,4 +1,7 @@
 dist
 node_modules
 logs.txt
+logs_backup.txt
 src/constants.ts
+work_periods.json
+logs_copy.txt

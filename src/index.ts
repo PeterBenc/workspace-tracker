@@ -4,5 +4,9 @@ const app = express();
 const port = 3001;
 
 app.listen(port, async () => {
-  logWorkspaces();
+  try {
+    await logWorkspaces();
+  } catch (e) {
+    process.exit();
+  }
 });
