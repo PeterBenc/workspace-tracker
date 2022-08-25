@@ -19,6 +19,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "dev": "cp /home/peter/Me/workspace-tracker/work_periods.json src/work_periods.json && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

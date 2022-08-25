@@ -7,7 +7,6 @@ const parse = () => {
   const logPeriods = parseLogPeriods();
   const workPeriods = parseWorkPeriods(logPeriods);
   saveWorkPeriodsToJson(workPeriods);
-  console.log(workPeriods);
   getTimeSpentStats(workPeriods);
 };
 

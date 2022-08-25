@@ -1,7 +1,7 @@
 import React from "react";
 import Kalend, { CalendarView } from "kalend";
 import "kalend/dist/styles/index.css";
-import WorkPeriods from "./work_periods_copy.json";
+import WorkPeriods from "./work_periods.json";
 
 const CalendComponent = (props) => {
   const events = WorkPeriods.map((wp) => {
