@@ -1,10 +1,10 @@
 import React from "react";
 import Kalend, { CalendarView } from "kalend";
 import "kalend/dist/styles/index.css";
-import WorkPeriods from "./work_periods.json";
+import workPeriods from "./work_periods.json";
 
 const CalendComponent = (props) => {
-  const events = WorkPeriods.map((wp) => {
+  const events = workPeriods.map((wp) => {
     return {
       id: 1,
       startAt: new Date(Number(wp.startTime) * 1000).toISOString(),
@@ -32,7 +32,7 @@ const CalendComponent = (props) => {
     // const msg = `Click on event action\n\n Callback data:\n\n${JSON.stringify(
     //   data
     // )}`;
-    console.log(WorkPeriods);
+    console.log(workPeriods);
   };
 
   // Callback after dragging is finished
@@ -50,7 +50,7 @@ const CalendComponent = (props) => {
         onEventClick={onEventClick}
         events={events}
         initialDate={new Date().toISOString()}
-        hourHeight={80}
+        hourHeight={300}
         showWeekNumbers={true}
         timezone={"Europe/Berlin"}
         // draggingDisabledConditions={{

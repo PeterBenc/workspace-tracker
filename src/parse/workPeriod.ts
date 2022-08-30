@@ -56,7 +56,10 @@ export const groupShortWorkPeriods = (workPeriods: WorkPeriod[]) => {
       const startTime = lastWorkDayPeriodEnd;
       const endTime = String(Number(startTime) + totalDuration);
       lastWorkDayPeriodEnd = endTime;
-      return [...acc, { ticker: key, startTime, endTime }];
+      return [
+        ...acc,
+        { ticker: key, startTime, endTime, description: value[0].description },
+      ];
     }, [] as WorkPeriod[]);
 
     const aggregatedShortDayWorkPeriods = aggregatedShortWorkPeriods.filter(
@@ -99,7 +102,12 @@ export const groupShortWorkPeriods = (workPeriods: WorkPeriod[]) => {
       );
       const startTime = String(lastDayLogEndTime);
       const endTime = String(Number(startTime) + totalDuration);
-      const aggregatedWorkPeriod = { ticker: key, startTime, endTime };
+      const aggregatedWorkPeriod = {
+        ticker: key,
+        startTime,
+        endTime,
+        description: value[value.length - 1].description,
+      };
       if (
         // ignore still too short work periods
         getWorkPeriodDuration(aggregatedWorkPeriod) >=
@@ -118,12 +126,14 @@ export const addPercentageToWorkPeriods = (
   coefficient: number
 ) => {
   const timeSpentByTicker = getTimeSpentByTicker(workPeriods);
-  const addedTimeByTicker = timeSpentByTicker.map(({ ticker, timeStat }) => {
-    const { hours, minutes, seconds } = timeStat;
-    const tickerTimeInSeconds = hours * 60 * 60 + minutes * 60 + seconds;
-    const addedSeconds = tickerTimeInSeconds * coefficient;
-    return { ticker, addedSeconds };
-  });
+  const addedTimeByTicker = timeSpentByTicker.map(
+    ({ ticker, timeStat, description }) => {
+      const { hours, minutes, seconds } = timeStat;
+      const tickerTimeInSeconds = hours * 60 * 60 + minutes * 60 + seconds;
+      const addedSeconds = tickerTimeInSeconds * coefficient;
+      return { ticker, addedSeconds, description };
+    }
+  );
 
   const addedWorkPeriods = [...workPeriods];
   addedTimeByTicker.forEach((addedTime) => {
@@ -144,6 +154,7 @@ export const addPercentageToWorkPeriods = (
       ticker: addedTime.ticker,
       startTime: lastDayLogEndTime.toString(),
       endTime: (lastDayLogEndTime + addedTime.addedSeconds).toString(),
+      description: addedTime.description,
     });
   });
   return addedWorkPeriods;

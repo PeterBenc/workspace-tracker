@@ -8,7 +8,7 @@ import {
   parseWorkPeriods,
 } from "./workPeriod";
 
-const parse = () => {
+export const parse = () => {
   const logPeriods = parseLogPeriods();
   const workPeriods = parseWorkPeriods(logPeriods);
   const addedWorkPeriods = addPercentageToWorkPeriods(
@@ -21,6 +21,7 @@ const parse = () => {
   );
   saveWorkPeriodsToJson(flooredWorkPeriods);
   getTimeSpentStats(flooredWorkPeriods);
+  return flooredWorkPeriods;
 };
 
 parse();

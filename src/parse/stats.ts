@@ -4,7 +4,8 @@ import { aggregateTimeStats, getPeriodLength, secondsToTime } from "./utils";
 
 export const getTimeSpentByTicker = (workPeriods: WorkPeriod[]) => {
   const workPeriodTimeStats = workPeriods.map(
-    ({ ticker, endTime, startTime }) => ({
+    ({ ticker, endTime, startTime, description }) => ({
+      description,
       ticker,
       timeStat: getPeriodLength(startTime, endTime),
     })
@@ -13,6 +14,7 @@ export const getTimeSpentByTicker = (workPeriods: WorkPeriod[]) => {
     .groupBy((x) => x.ticker)
     .map((x, ticker) => ({
       ticker,
+      description: workPeriodTimeStats[0].description,
       timeStat: secondsToTime(x.reduce((acc, prev) => acc + prev.timeStat, 0)),
     }))
     .value();
