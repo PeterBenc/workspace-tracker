@@ -29,9 +29,9 @@ const CalendComponent = (props) => {
 
   // Callback for event click
   const onEventClick = (data) => {
-    const msg = `Click on event action\n\n Callback data:\n\n${JSON.stringify(
-      data
-    )}`;
+    // const msg = `Click on event action\n\n Callback data:\n\n${JSON.stringify(
+    //   data
+    // )}`;
     console.log(WorkPeriods);
   };
 
