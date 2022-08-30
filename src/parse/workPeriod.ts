@@ -79,36 +79,38 @@ export const groupShortWorkPeriods = (workPeriods: WorkPeriod[]) => {
   );
 
   // group short logs by month
-  const monthGroupedShortWorkPeriods = Object.entries(
-    _.groupBy(shortMonthWorkPeriods, (wp) => wp.ticker)
-  ).reduce((acc, [key, value]) => {
-    const totalDuration = value.reduce(
-      (a, c) => a + getWorkPeriodDuration(c),
-      0
-    );
-    const valueStartDate = new Date(
-      Number(value[value.length - 1].startTime) * 1000
-    );
-    const startTime = String(valueStartDate.setHours(18, 0, 0) / 1000);
-    const endTime = String(Number(startTime) + totalDuration);
-    const aggregatedWorkPeriod = { ticker: key, startTime, endTime };
-    if (
-      // ignore still too short work periods
-      getWorkPeriodDuration(aggregatedWorkPeriod) < MINIMAL_WORK_PERIOD_LENGTH
-    ) {
-      return acc;
-    }
-    return [...acc, aggregatedWorkPeriod];
-  }, [] as WorkPeriod[]);
-  return [...longWorkPeriods, ...monthGroupedShortWorkPeriods];
-};
-
-const ceilTimeToMinute = (time: number) => {
-  return Math.ceil(time / 60) * 60;
+  Object.entries(_.groupBy(shortMonthWorkPeriods, (wp) => wp.ticker)).forEach(
+    ([key, value]) => {
+      const totalDuration = value.reduce(
+        (a, c) => a + getWorkPeriodDuration(c),
+        0
+      );
+      const valueStartDate = new Date(
+        Number(value[value.length - 1].startTime) * 1000
+      );
+      const valueDay = valueStartDate.getDate();
+      const workPeriodsByDay = _.groupBy(longWorkPeriods, (wp) =>
+        getDayFromTime(Number(wp.startTime))
+      );
+      const lastDayLogEndTime = Math.max(
+        ...workPeriodsByDay[valueDay].map((wp) => Number(wp.endTime))
+      );
+      const startTime = String(lastDayLogEndTime);
+      const endTime = String(Number(startTime) + totalDuration);
+      const aggregatedWorkPeriod = { ticker: key, startTime, endTime };
+      if (
+        // ignore still too short work periods
+        getWorkPeriodDuration(aggregatedWorkPeriod) >=
+        MINIMAL_WORK_PERIOD_LENGTH
+      ) {
+        longWorkPeriods.push(aggregatedWorkPeriod);
+      }
+    },
+    [] as WorkPeriod[]
+  );
+  return longWorkPeriods;
 };
 
 const floorTimeToMinute = (time: number) => {
   return Math.floor(time / 60) * 60;
 };
-
-// ceil all logs to minute, maybe you want to do that in `logPeriod.ts` not here
