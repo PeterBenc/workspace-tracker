@@ -46,3 +46,15 @@ export const getDayFromTime = (time: number) => {
 export const getWorkPeriodDuration = (workPeriod: WorkPeriod) => {
   return Number(workPeriod.endTime) - Number(workPeriod.startTime);
 };
+
+const floorTimeToMinute = (time: number) => {
+  return Math.floor(time / 60) * 60;
+};
+
+export const floorWorkPeriodsToMinute = (workPeriods: WorkPeriod[]) => {
+  return workPeriods.map((wp) => ({
+    ...wp,
+    startTime: floorTimeToMinute(Number(wp.startTime)).toString(),
+    endTime: floorTimeToMinute(Number(wp.endTime)).toString(),
+  }));
+};

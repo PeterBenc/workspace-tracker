@@ -1,7 +1,8 @@
 import _ from "lodash";
 import { MINIMAL_WORK_PERIOD_LENGTH } from "../constants";
+import { getTimeSpentByTicker, getTotalWorkPeriodTime } from "./stats";
 import { LogPeriod, WorkPeriod } from "./types";
-import { getDayFromTime, getWorkPeriodDuration } from "./utils";
+import { getDayFromTime, getWorkPeriodDuration, secondsToTime } from "./utils";
 
 const isTicker = (workspaceName: string) => {
   return workspaceName.startsWith("t-") || workspaceName.startsWith("r-");
@@ -19,8 +20,8 @@ export const parseWorkPeriods = (logPeriods: LogPeriod[]): WorkPeriod[] => {
   return logPeriods
     .filter(({ workspaceName }) => isTicker(workspaceName))
     .map(({ startTime, endTime, workspaceName }) => ({
-      startTime: floorTimeToMinute(Number(startTime)).toString(),
-      endTime: floorTimeToMinute(Number(endTime)).toString(),
+      startTime,
+      endTime,
       ...parseTicker(workspaceName),
     }));
 };
@@ -85,15 +86,16 @@ export const groupShortWorkPeriods = (workPeriods: WorkPeriod[]) => {
         (a, c) => a + getWorkPeriodDuration(c),
         0
       );
-      const valueStartDate = new Date(
+      // log monthly short logs at the their last log day as the last log of the day
+      const workPeriodLastLogTime = new Date(
         Number(value[value.length - 1].startTime) * 1000
       );
-      const valueDay = valueStartDate.getDate();
+      const workPeriodLastDay = workPeriodLastLogTime.getDate();
       const workPeriodsByDay = _.groupBy(longWorkPeriods, (wp) =>
         getDayFromTime(Number(wp.startTime))
       );
       const lastDayLogEndTime = Math.max(
-        ...workPeriodsByDay[valueDay].map((wp) => Number(wp.endTime))
+        ...workPeriodsByDay[workPeriodLastDay].map((wp) => Number(wp.endTime))
       );
       const startTime = String(lastDayLogEndTime);
       const endTime = String(Number(startTime) + totalDuration);
@@ -111,6 +113,38 @@ export const groupShortWorkPeriods = (workPeriods: WorkPeriod[]) => {
   return longWorkPeriods;
 };
 
-const floorTimeToMinute = (time: number) => {
-  return Math.floor(time / 60) * 60;
+export const addPercentageToWorkPeriods = (
+  workPeriods: WorkPeriod[],
+  coefficient: number
+) => {
+  const timeSpentByTicker = getTimeSpentByTicker(workPeriods);
+  const addedTimeByTicker = timeSpentByTicker.map(({ ticker, timeStat }) => {
+    const { hours, minutes, seconds } = timeStat;
+    const tickerTimeInSeconds = hours * 60 * 60 + minutes * 60 + seconds;
+    const addedSeconds = tickerTimeInSeconds * coefficient;
+    return { ticker, addedSeconds };
+  });
+
+  const addedWorkPeriods = [...workPeriods];
+  addedTimeByTicker.forEach((addedTime) => {
+    const lastWorkPeriodDate = new Date(
+      Math.min(
+        ...addedWorkPeriods
+          .filter((wp) => wp.ticker === addedTime.ticker)
+          .map((wp) => Number(wp.endTime))
+      ) * 1000
+    ).getDate();
+    const workPeriodsByDay = _.groupBy(addedWorkPeriods, (wp) =>
+      getDayFromTime(Number(wp.startTime))
+    );
+    const lastDayLogEndTime = Math.max(
+      ...workPeriodsByDay[lastWorkPeriodDate].map((wp) => Number(wp.endTime))
+    );
+    addedWorkPeriods.push({
+      ticker: addedTime.ticker,
+      startTime: lastDayLogEndTime.toString(),
+      endTime: (lastDayLogEndTime + addedTime.addedSeconds).toString(),
+    });
+  });
+  return addedWorkPeriods;
 };

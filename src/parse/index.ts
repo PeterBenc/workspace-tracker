@@ -1,14 +1,26 @@
 import { saveWorkPeriodsToJson } from "../file";
 import { parseLogPeriods } from "./logPeriod";
 import { getTimeSpentStats } from "./stats";
-import { groupShortWorkPeriods, parseWorkPeriods } from "./workPeriod";
+import { floorWorkPeriodsToMinute } from "./utils";
+import {
+  addPercentageToWorkPeriods,
+  groupShortWorkPeriods,
+  parseWorkPeriods,
+} from "./workPeriod";
 
 const parse = () => {
   const logPeriods = parseLogPeriods();
   const workPeriods = parseWorkPeriods(logPeriods);
-  const aggregatedWorkPeriods = groupShortWorkPeriods(workPeriods);
-  saveWorkPeriodsToJson(aggregatedWorkPeriods);
-  getTimeSpentStats(aggregatedWorkPeriods);
+  const addedWorkPeriods = addPercentageToWorkPeriods(
+    groupShortWorkPeriods(workPeriods),
+    0.15
+  );
+  const aggregatedAddedWorkPeriods = groupShortWorkPeriods(addedWorkPeriods);
+  const flooredWorkPeriods = floorWorkPeriodsToMinute(
+    aggregatedAddedWorkPeriods
+  );
+  saveWorkPeriodsToJson(flooredWorkPeriods);
+  getTimeSpentStats(flooredWorkPeriods);
 };
 
 parse();
