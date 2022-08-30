@@ -34,7 +34,7 @@ export const aggregateTimeStats = (
   return {
     hours: timeStat1.hours + timeStat2.hours,
     minutes: timeStat1.minutes + timeStat2.minutes,
-    seconds: timeStat1.minutes + timeStat2.minutes,
+    seconds: timeStat1.minutes + timeStat2.seconds,
   };
 };
 

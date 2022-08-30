@@ -19,8 +19,8 @@ export const parseWorkPeriods = (logPeriods: LogPeriod[]): WorkPeriod[] => {
   return logPeriods
     .filter(({ workspaceName }) => isTicker(workspaceName))
     .map(({ startTime, endTime, workspaceName }) => ({
-      startTime,
-      endTime,
+      startTime: floorTimeToMinute(Number(startTime)).toString(),
+      endTime: floorTimeToMinute(Number(endTime)).toString(),
       ...parseTicker(workspaceName),
     }));
 };
@@ -77,6 +77,7 @@ export const groupShortWorkPeriods = (workPeriods: WorkPeriod[]) => {
   const shortMonthWorkPeriods = dayGroupedWorkPeriods.flatMap(
     (wps) => wps.ultraShortDayWorkPeriods
   );
+
   // group short logs by month
   const monthGroupedShortWorkPeriods = Object.entries(
     _.groupBy(shortMonthWorkPeriods, (wp) => wp.ticker)
@@ -85,11 +86,19 @@ export const groupShortWorkPeriods = (workPeriods: WorkPeriod[]) => {
       (a, c) => a + getWorkPeriodDuration(c),
       0
     );
-    const x = new Date(Number(value[value.length - 1].startTime) * 1000);
-    const y = x.setHours(3);
-    const startTime = String(x.getTime() / 1000);
+    const valueStartDate = new Date(
+      Number(value[value.length - 1].startTime) * 1000
+    );
+    const startTime = String(valueStartDate.setHours(18, 0, 0) / 1000);
     const endTime = String(Number(startTime) + totalDuration);
-    return [...acc, { ticker: key, startTime, endTime }];
+    const aggregatedWorkPeriod = { ticker: key, startTime, endTime };
+    if (
+      // ignore still too short work periods
+      getWorkPeriodDuration(aggregatedWorkPeriod) < MINIMAL_WORK_PERIOD_LENGTH
+    ) {
+      return acc;
+    }
+    return [...acc, aggregatedWorkPeriod];
   }, [] as WorkPeriod[]);
   return [...longWorkPeriods, ...monthGroupedShortWorkPeriods];
 };
