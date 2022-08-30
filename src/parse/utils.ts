@@ -1,4 +1,4 @@
-import { LogTimeStat } from "./types";
+import { LogTimeStat, WorkPeriod } from "./types";
 
 export const formatTime = (time: string): string => {
   return new Date(Number(time) * 1000)
@@ -36,4 +36,13 @@ export const aggregateTimeStats = (
     minutes: timeStat1.minutes + timeStat2.minutes,
     seconds: timeStat1.minutes + timeStat2.minutes,
   };
+};
+
+export const getDayFromTime = (time: number) => {
+  const date = new Date(time * 1000);
+  return date.getDate();
+};
+
+export const getWorkPeriodDuration = (workPeriod: WorkPeriod) => {
+  return Number(workPeriod.endTime) - Number(workPeriod.startTime);
 };

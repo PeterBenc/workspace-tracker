@@ -8,3 +8,5 @@ export const LOG_PARSE_FILE_PATH =
   "/home/peter/Me/workspace-tracker/logs_copy.txt";
 export const WORK_PERIOD_FILE_PATH =
   "/home/peter/Me/workspace-tracker/work_periods.json";
+
+export const MINIMAL_WORK_PERIOD_LENGTH = 15 * 60;

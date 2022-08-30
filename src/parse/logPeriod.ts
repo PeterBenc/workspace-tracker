@@ -16,8 +16,10 @@ export const parseLogPeriods = (): LogPeriod[] => {
     .reduce((acc, curr, i, array) => {
       const nextItem = array[i + 1];
       const LOG_INTERVAL_SECONDS = LOG_INTERVAL / 1000;
+
       if (nextItem) {
         if (
+          // if a log does not have consecutive log after that, it means the logging stopped, most likely due to the pc sleeping
           Number(nextItem.time) - Number(curr.time) >
           2 * LOG_INTERVAL_SECONDS
         ) {

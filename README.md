@@ -7,3 +7,4 @@
 [] - work periods => tempo format
 [] - first commit and then submit tempo time sheets on command
 [] - get previous day logs, sync with jira to have the task description
+[] - everyday before standup, generate report from previous day (days if without description) and add description to events
