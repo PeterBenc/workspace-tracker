@@ -15,3 +15,20 @@ export const saveWorkPeriodsToJson = (workLogs: WorkPeriod[]) => {
   let data = JSON.stringify(workLogs);
   fs.writeFileSync(WORK_PERIOD_FILE_PATH, data);
 };
+
+// just for manual logging
+export const saveUtilWorkPeriodsToJson = (workLogs: WorkPeriod[]) => {
+  const utilWorkLogs = workLogs.map((wp) => ({
+    date: new Date(Number(wp.startTime) * 1000).getDate(),
+    startTime: new Date((Number(wp.startTime) + 9 * 3600) * 1000)
+      .toTimeString()
+      .replace(":00 GMT-0700 (Pacific Daylight Time)", ""),
+    endTime: new Date((Number(wp.endTime) + 9 * 3600) * 1000)
+      .toTimeString()
+      .replace(":00 GMT-0700 (Pacific Daylight Time)", ""),
+    ticker: wp.ticker,
+    description: wp.description,
+  }));
+  let data = JSON.stringify(utilWorkLogs);
+  fs.writeFileSync(WORK_PERIOD_FILE_PATH, data);
+};

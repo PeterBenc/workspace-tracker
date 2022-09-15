@@ -3,7 +3,7 @@ import { WorkPeriod } from "../parse/types";
 import { TempoWorkLog } from "./types";
 
 const jiraUri = "https://vacuum.atlassian.net/jira";
-const apiToken = "lpi0yQMQXKGml2SFSfLJA6A0";
+const apiToken = "B5njNBix8LBEDWmwDlplE8XUbsQv5y";
 const userName = "peter.benc";
 const password = "Abpb6789wistA";
 
