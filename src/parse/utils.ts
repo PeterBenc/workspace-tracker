@@ -23,8 +23,8 @@ export function secondsToTime(secs: number): LogTimeStat {
   };
 }
 
-export const getPeriodLength = (startTime: string, endTime: string) => {
-  return Number(endTime) - Number(startTime);
+export const getPeriodLength = (startTime: number, endTime: number) => {
+  return endTime - startTime;
 };
 
 export const aggregateTimeStats = (
@@ -51,10 +51,12 @@ const floorTimeToMinute = (time: number) => {
   return Math.floor(time / 60) * 60;
 };
 
-export const floorWorkPeriodsToMinute = (workPeriods: WorkPeriod[]) => {
+export const floorWorkPeriodsToMinute = (
+  workPeriods: WorkPeriod[]
+): WorkPeriod[] => {
   return workPeriods.map((wp) => ({
     ...wp,
-    startTime: floorTimeToMinute(Number(wp.startTime)).toString(),
-    endTime: floorTimeToMinute(Number(wp.endTime)).toString(),
+    startTime: floorTimeToMinute(wp.startTime),
+    endTime: floorTimeToMinute(wp.endTime),
   }));
 };

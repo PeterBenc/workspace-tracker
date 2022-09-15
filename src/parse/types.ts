@@ -1,13 +1,13 @@
 export type LogPeriod = {
   workspaceName: string;
-  startTime: string;
-  endTime: string;
+  startTime: number;
+  endTime: number;
 };
 
 export type WorkPeriod = {
   ticker: string;
-  startTime: string;
-  endTime: string;
+  startTime: number;
+  endTime: number;
   description: string;
 };
 

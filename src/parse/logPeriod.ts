@@ -39,21 +39,24 @@ export const parseLogPeriods = (): LogPeriod[] => {
   let groupedLogs: LogPeriod[] = [];
   let logPeriod: LogPeriod = {
     workspaceName: logs[0].workspaceName,
-    startTime: logs[0].time,
-    endTime: "",
+    startTime: Number(logs[0].time),
+    endTime: 0,
   };
   logs.forEach((l) => {
     if (l.workspaceName !== logPeriod.workspaceName) {
-      groupedLogs.push({ ...logPeriod, endTime: l.time });
+      groupedLogs.push({ ...logPeriod, endTime: Number(l.time) });
       // new log period
       logPeriod = {
-        startTime: l.time,
+        startTime: Number(l.time),
         workspaceName: l.workspaceName,
-        endTime: "",
+        endTime: 0,
       };
     }
   });
-  groupedLogs.push({ ...logPeriod, endTime: logs[logs.length - 1].time });
+  groupedLogs.push({
+    ...logPeriod,
+    endTime: Number(logs[logs.length - 1].time),
+  });
 
   return groupedLogs;
 };

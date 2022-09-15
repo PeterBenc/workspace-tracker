@@ -1,8 +1,8 @@
 import _ from "lodash";
 import { MINIMAL_WORK_PERIOD_LENGTH } from "../constants";
-import { getTimeSpentByTicker, getTotalWorkPeriodTime } from "./stats";
+import { getTimeSpentByTicker } from "./stats";
 import { LogPeriod, WorkPeriod } from "./types";
-import { getDayFromTime, getWorkPeriodDuration, secondsToTime } from "./utils";
+import { getDayFromTime, getWorkPeriodDuration } from "./utils";
 
 const isTicker = (workspaceName: string) => {
   return workspaceName.startsWith("t-") || workspaceName.startsWith("r-");
@@ -54,7 +54,7 @@ export const groupShortWorkPeriods = (workPeriods: WorkPeriod[]) => {
         0
       );
       const startTime = lastWorkDayPeriodEnd;
-      const endTime = String(Number(startTime) + totalDuration);
+      const endTime = startTime + totalDuration;
       lastWorkDayPeriodEnd = endTime;
       return [
         ...acc,
@@ -100,8 +100,8 @@ export const groupShortWorkPeriods = (workPeriods: WorkPeriod[]) => {
       const lastDayLogEndTime = Math.max(
         ...workPeriodsByDay[workPeriodLastDay].map((wp) => Number(wp.endTime))
       );
-      const startTime = String(lastDayLogEndTime);
-      const endTime = String(Number(startTime) + totalDuration);
+      const startTime = lastDayLogEndTime;
+      const endTime = startTime + totalDuration;
       const aggregatedWorkPeriod = {
         ticker: key,
         startTime,
@@ -152,8 +152,8 @@ export const addPercentageToWorkPeriods = (
     );
     addedWorkPeriods.push({
       ticker: addedTime.ticker,
-      startTime: lastDayLogEndTime.toString(),
-      endTime: (lastDayLogEndTime + addedTime.addedSeconds).toString(),
+      startTime: lastDayLogEndTime,
+      endTime: lastDayLogEndTime + addedTime.addedSeconds,
       description: addedTime.description,
     });
   });
