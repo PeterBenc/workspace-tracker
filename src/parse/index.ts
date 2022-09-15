@@ -1,6 +1,5 @@
 import { saveWorkPeriodsToJson } from "../file";
 import { parseLogPeriods } from "./logPeriod";
-import { getTimeSpentStats } from "./stats";
 import { floorWorkPeriodsToMinute } from "./utils";
 import {
   addPercentageToWorkPeriods,
@@ -20,7 +19,6 @@ export const parse = () => {
     aggregatedAddedWorkPeriods
   );
   saveWorkPeriodsToJson(flooredWorkPeriods);
-  getTimeSpentStats(flooredWorkPeriods);
   return flooredWorkPeriods;
 };
 

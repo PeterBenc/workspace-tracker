@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev:logging": "npx tsc && node dist/index.js",
-    "parse:logs": "npx tsc && node dist/parse/index.js",
-    "submit:logs": "npx tsc && node dist/tempo/index.js",
-    "calendar": "yarn parse:logs && cd src/calendar && yarn dev"
+    "build": "npx tsc && node dist/parse/index.js",
+    "logs:stats": "yarn build && node dist/stats/index.js",
+    "logs:submit": "yarn build && node dist/tempo/index.js",
+    "calendar": "yarn build && cd src/calendar && yarn dev"
   },
   "keywords": [],
   "author": "",

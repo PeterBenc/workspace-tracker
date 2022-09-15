@@ -1,6 +1,6 @@
 import _ from "lodash";
 import { MINIMAL_WORK_PERIOD_LENGTH } from "../constants";
-import { getTimeSpentByTicker } from "./stats";
+import { getTimeSpentByTicker } from "../stats/utils";
 import { LogPeriod, WorkPeriod } from "./types";
 import { getDayFromTime, getWorkPeriodDuration } from "./utils";
 
