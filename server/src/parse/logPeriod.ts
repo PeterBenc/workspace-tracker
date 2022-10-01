@@ -1,6 +1,7 @@
 import fs from "fs";
 import _ from "lodash";
 import { LOG_INTERVAL, LOG_PARSE_FILE_PATH } from "../constants";
+import { WorkspaceLog } from "../types";
 import { LogPeriod } from "./types";
 
 export const parseLogPeriods = (): LogPeriod[] => {

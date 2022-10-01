@@ -5,6 +5,7 @@ import {
   WORK_PERIOD_MANUAL_LOG_FILE_PATH,
 } from "./constants";
 import { WorkPeriod } from "./parse/types";
+import { WorkspaceLog } from "./types";
 
 export const appendToLogFile = (workspaceLogs: WorkspaceLog[]) => {
   fs.appendFileSync(
