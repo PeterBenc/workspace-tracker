@@ -1,5 +1,5 @@
 import React from "react";
-import Kalend, { CalendarView } from "kalend";
+import Kalend, { CalendarEvent, CalendarView } from "kalend";
 import "kalend/dist/styles/index.css";
 import workPeriods from "./work_periods.json";
 
@@ -48,7 +48,7 @@ const CalendComponent = (props) => {
         initialView={CalendarView.WEEK}
         disabledViews={[]}
         onEventClick={onEventClick}
-        events={events}
+        events={events as unknown as CalendarEvent[]}
         initialDate={new Date().toISOString()}
         hourHeight={60}
         showWeekNumbers={true}
