@@ -5,3 +5,4 @@ logs_backup.txt
 src/constants.ts
 work_periods.json
 logs_copy.txt
+work_periods_manual.json

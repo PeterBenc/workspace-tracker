@@ -1,5 +1,9 @@
 import fs from "fs";
-import { LOG_FILE_PATH, WORK_PERIOD_FILE_PATH } from "./constants";
+import {
+  LOG_FILE_PATH,
+  WORK_PERIOD_FILE_PATH,
+  WORK_PERIOD_MANUAL_LOG_FILE_PATH,
+} from "./constants";
 import { WorkPeriod } from "./parse/types";
 
 export const appendToLogFile = (workspaceLogs: WorkspaceLog[]) => {
@@ -20,15 +24,15 @@ export const saveWorkPeriodsToJson = (workLogs: WorkPeriod[]) => {
 export const saveUtilWorkPeriodsToJson = (workLogs: WorkPeriod[]) => {
   const utilWorkLogs = workLogs.map((wp) => ({
     date: new Date(Number(wp.startTime) * 1000).getDate(),
-    startTime: new Date((Number(wp.startTime) + 9 * 3600) * 1000)
+    startTime: new Date((Number(wp.startTime) + 0 * 3600) * 1000)
       .toTimeString()
       .replace(":00 GMT-0700 (Pacific Daylight Time)", ""),
-    endTime: new Date((Number(wp.endTime) + 9 * 3600) * 1000)
+    endTime: new Date((Number(wp.endTime) + 0 * 3600) * 1000)
       .toTimeString()
       .replace(":00 GMT-0700 (Pacific Daylight Time)", ""),
     ticker: wp.ticker,
     description: wp.description,
   }));
   let data = JSON.stringify(utilWorkLogs);
-  fs.writeFileSync(WORK_PERIOD_FILE_PATH, data);
+  fs.writeFileSync(WORK_PERIOD_MANUAL_LOG_FILE_PATH, data);
 };

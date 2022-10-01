@@ -60,8 +60,9 @@ const getPrettyWorkPeriods = (workPeriods: WorkPeriod[]) => {
   return workPeriods.map((wp) => {
     return {
       ...wp,
-      startTime: new Date(wp.startTime * 1000).toDateString(),
-      endTime: new Date(wp.endTime * 1000).toDateString(),
+      startTime: new Date(wp.startTime * 1000).toTimeString().substring(0, 6),
+      endTime:
+        "  " + new Date(wp.endTime * 1000).toTimeString().substring(0, 6),
     };
   });
 };
@@ -77,11 +78,11 @@ export const getPreviousDayWorkPeriods = (workPeriods: WorkPeriod[]) => {
     previousWorkingDayDate
   );
   console.log(`Last working day: ${previousWorkingDayDate.toDateString()}`);
-  console.log(getTotalWorkPeriodTime(lastDayWorkPeriods));
   console.log(getPrettyWorkPeriods(lastDayWorkPeriods));
+  console.log(getTotalWorkPeriodTime(lastDayWorkPeriods));
 
   console.log(`Today: ${new Date().toDateString()}`);
   const todaysWorkPeriods = getDayWorkPeriods(workPeriods, new Date());
-  console.log(getTotalWorkPeriodTime(todaysWorkPeriods));
   console.log(getPrettyWorkPeriods(todaysWorkPeriods));
+  console.log(getTotalWorkPeriodTime(todaysWorkPeriods));
 };

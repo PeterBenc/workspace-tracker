@@ -50,7 +50,7 @@ const CalendComponent = (props) => {
         onEventClick={onEventClick}
         events={events}
         initialDate={new Date().toISOString()}
-        hourHeight={300}
+        hourHeight={60}
         showWeekNumbers={true}
         timezone={"Europe/Berlin"}
         // draggingDisabledConditions={{

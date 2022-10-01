@@ -1,4 +1,4 @@
-import { saveWorkPeriodsToJson } from "../file";
+import { saveUtilWorkPeriodsToJson, saveWorkPeriodsToJson } from "../file";
 import { parseLogPeriods } from "./logPeriod";
 import { floorWorkPeriodsToMinute } from "./utils";
 import {
@@ -18,6 +18,7 @@ export const parse = () => {
   const flooredWorkPeriods = floorWorkPeriodsToMinute(
     aggregatedAddedWorkPeriods
   );
+  saveUtilWorkPeriodsToJson(flooredWorkPeriods);
   saveWorkPeriodsToJson(flooredWorkPeriods);
   return flooredWorkPeriods;
 };

@@ -45,7 +45,7 @@ export const groupShortWorkPeriods = (workPeriods: WorkPeriod[]) => {
 
     // aggregate too short work periods into one
     let lastWorkDayPeriodEnd =
-      longDayWorkPeriods[longDayWorkPeriods.length - 1].endTime;
+      longDayWorkPeriods[longDayWorkPeriods.length - 1]?.endTime;
     const aggregatedShortWorkPeriods = Object.entries(
       groupedShortDayWorkPeriods
     ).reduce((acc, [key, value], i) => {

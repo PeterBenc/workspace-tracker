@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npx tsc && node dist/parse/index.js",
+    "build": "cp logs.txt logs_copy.txt && npx tsc && node dist/parse/index.js",
     "logs:stats": "yarn build && node dist/stats/index.js",
     "logs:submit": "yarn build && node dist/tempo/index.js",
     "calendar": "yarn build && cd src/calendar && yarn dev"
