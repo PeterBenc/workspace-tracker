@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "service:setup": "sh ./scripts/setup_service.sh",
-    "service:restart": "sh ./scripts/restart_service.sh",
+    "service:setup": "sh ./../scripts/setup_service.sh",
+    "service:restart": "sh ./../scripts/restart_service.sh",
     "init": "touch logs.txt && yarn service:setup && yarn service:restart",
     "build": "cp ./../logs.txt ./../logs_copy.txt && npx tsc && node dist/parse/index.js",
     "logs:stats": "yarn build && node dist/stats/index.js",

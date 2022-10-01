@@ -4,11 +4,13 @@ Documentation=https://example.com
 After=network.target
 
 [Service]
+ExecStartPre=/bin/sleep 120
 Environment=NODE_PORT=1000
 Type=simple
 User=peter
-ExecStart=/usr/bin/node /home/peter/Me/workspace-tracker/dist/index.js
+ExecStart=/usr/bin/node /home/peter/Me/workspace-tracker/server/dist/index.js
 Restart=on-failure
+TimeoutSec=900
 
 [Install]
 WantedBy=multi-user.target
