@@ -3,5 +3,11 @@
   "workspaces": [
     "server",
     "app"
-  ]
+  ],
+  "scripts": {
+    "service:setup": "sh ./scripts/setup_service.sh",
+    "service:restart": "sh ./scripts/restart_service.sh",
+    "init": "touch logs.txt && yarn service:setup && yarn service:restart",
+    "calendar": "yarn workspace server build && yarn workspace app dev"
+  }
 }
