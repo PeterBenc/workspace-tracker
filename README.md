@@ -2,6 +2,7 @@
 
 - [ ] fix service failing after boot
 - [ ] make calendar the central piece of the app
+- [ ] a new workspace called W for work stuff that yu cant really assign to a specific task
 
 - [ ] ts react
 - [ ] serverful app with webpack (or better solution)

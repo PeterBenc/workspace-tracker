@@ -70,7 +70,7 @@ const getPrettyWorkPeriods = (workPeriods: WorkPeriod[]) => {
 export const getPreviousDayWorkPeriods = (workPeriods: WorkPeriod[]) => {
   const previousWorkingDayDate = new Date(
     new Date().setDate(
-      new Date().getDate() - (new Date().getDate() === 0 ? 3 : 1)
+      new Date().getDate() - (new Date().getDay() === 1 ? 3 : 1)
     )
   );
   const lastDayWorkPeriods = getDayWorkPeriods(

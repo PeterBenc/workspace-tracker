@@ -11,4 +11,5 @@ export const WORK_PERIOD_FILE_PATH =
 export const WORK_PERIOD_MANUAL_LOG_FILE_PATH =
   "/home/peter/Me/workspace-tracker/work_periods_manual.json";
 
+// in seconds
 export const MINIMAL_WORK_PERIOD_LENGTH = 15 * 60;

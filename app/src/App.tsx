@@ -1,81 +1,46 @@
-import React from "react";
-import Kalend, { CalendarEvent, CalendarView } from "kalend";
+import React, { useEffect, useState } from "react";
 import "kalend/dist/styles/index.css";
-import workPeriods from "./work_periods.json";
+import { googleCalendar } from "./utils/googleCalendar";
+import Kalendar from "./components/kalendar";
 
-const CalendComponent = (props) => {
-  const events = workPeriods.map((wp) => {
-    return {
-      id: 1,
-      startAt: new Date(Number(wp.startTime) * 1000).toISOString(),
-      endAt: new Date(Number(wp.endTime) * 1000).toISOString(),
-      timezoneStartAt: "Europe/Berlin", // optional
-      summary: wp.ticker,
-      color: "blue",
-      calendarID: "work",
-    };
-  });
-  const onNewEventClick = (data) => {
-    const msg = `New event click action\n\n Callback data:\n\n${JSON.stringify({
-      hour: data.hour,
-      day: data.day,
-      startAt: data.startAt,
-      endAt: data.endAt,
-      view: data.view,
-      event: "click event ",
-    })}`;
-    console.log(msg);
+const App = (props) => {
+  const [events, setEvents] = useState<unknown[]>([]);
+  const [shouldTry, setShouldTry] = useState<boolean>(false);
+  const [count, setCount] = useState(0);
+
+  const handleAuth = async () => {
+    googleCalendar.handleAuth();
+    setShouldTry(true);
   };
 
-  // Callback for event click
-  const onEventClick = (data) => {
-    // const msg = `Click on event action\n\n Callback data:\n\n${JSON.stringify(
-    //   data
-    // )}`;
-    console.log(workPeriods);
+  const getEvents = async () => {
+    try {
+      const events = await googleCalendar.listEvents();
+      console.log(events);
+      setEvents(events);
+      setShouldTry(false);
+    } catch (e) {}
   };
 
-  // Callback after dragging is finished
-  const onEventDragFinish = (prev, current, data) => {
-    console.log("shit");
-  };
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (shouldTry) {
+        getEvents();
+        setCount(count + 1);
+      }
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [shouldTry, count]);
 
   return (
     <div style={{ height: "1600px" }}>
-      <Kalend
-        kalendRef={props.kalendRef}
-        onNewEventClick={onNewEventClick}
-        initialView={CalendarView.WEEK}
-        disabledViews={[]}
-        onEventClick={onEventClick}
-        events={events as unknown as CalendarEvent[]}
-        initialDate={new Date().toISOString()}
-        hourHeight={60}
-        showWeekNumbers={true}
-        timezone={"Europe/Berlin"}
-        // draggingDisabledConditions={{
-        //   summary: 'Computers',
-        //   allDay: false,
-        //   color: 'pink',
-        // }}
-        onEventDragFinish={onEventDragFinish}
-        onStateChange={props.onStateChange}
-        selectedView={props.selectedView}
-        showTimeLine={true}
-        isDark={false}
-        autoScroll={true}
-        disabledDragging={true}
-        // colors={{
-        //   light: {
-        //     primaryColor: 'blue',
-        //   },
-        //   dark: {
-        //     primaryColor: 'orange',
-        //   },
-        // }}
-      />
+      {events.length > 0 ? (
+        <Kalendar events={events} />
+      ) : (
+        <button onClick={handleAuth}>Login</button>
+      )}
     </div>
   );
 };
 
-export default CalendComponent;
+export default App;

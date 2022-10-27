@@ -8,11 +8,15 @@ import {
 import fs from "fs";
 
 const getStats = () => {
-  const workPeriods = JSON.parse(
-    fs.readFileSync(WORK_PERIOD_FILE_PATH, {
-      encoding: "ascii",
-    })
-  ) as WorkPeriod[];
+  const workPeriods = (
+    JSON.parse(
+      fs.readFileSync(WORK_PERIOD_FILE_PATH, {
+        encoding: "ascii",
+      })
+    ) as WorkPeriod[]
+  ).filter(
+    (wp) => new Date().getMonth() === new Date(wp.endTime * 1000).getMonth()
+  );
   const mode = process.argv[2];
   switch (mode) {
     case "all":
