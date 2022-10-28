@@ -26,6 +26,7 @@ export const parseWorkPeriods = (logPeriods: LogPeriod[]): WorkPeriod[] => {
     .map(({ startTime, endTime, workspaceName }) => ({
       startTime,
       endTime,
+      type: "tracked",
       ...parseTicker(workspaceName),
     }));
 };
@@ -126,7 +127,13 @@ export const groupShortWorkPeriods = (workPeriods: WorkPeriod[]) => {
       lastWorkDayPeriodEnd = endTime;
       return [
         ...acc,
-        { ticker: key, startTime, endTime, description: value[0].description },
+        {
+          ticker: key,
+          startTime,
+          endTime,
+          description: value[0].description,
+          type: "aggregated",
+        } as WorkPeriod,
       ];
     }, [] as WorkPeriod[]);
 
@@ -170,11 +177,12 @@ export const groupShortWorkPeriods = (workPeriods: WorkPeriod[]) => {
       );
       const startTime = lastDayLogEndTime;
       const endTime = startTime + totalDuration;
-      const aggregatedWorkPeriod = {
+      const aggregatedWorkPeriod: WorkPeriod = {
         ticker: key,
         startTime,
         endTime,
         description: value[value.length - 1].description,
+        type: "aggregated",
       };
       if (
         // ignore still too short work periods
@@ -223,6 +231,7 @@ export const addPercentageToWorkPeriods = (
       startTime: lastDayLogEndTime,
       endTime: lastDayLogEndTime + addedTime.addedSeconds,
       description: addedTime.description,
+      type: "added",
     });
   });
   return addedWorkPeriods;

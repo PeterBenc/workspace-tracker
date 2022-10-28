@@ -9,6 +9,7 @@ export type WorkPeriod = {
   startTime: number;
   endTime: number;
   description: string;
+  type: "tracked" | "added" | "aggregated" | "calendar";
 };
 
 export type LogTimeStat = {

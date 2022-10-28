@@ -25,6 +25,21 @@ const Kalendar = (props) => {
     console.log("shit");
   };
 
+  const getEventColor = (type: string) => {
+    switch (type) {
+      case "added":
+        return "grey";
+      case "aggregated":
+        return "green";
+      case "tracked":
+        return "blue";
+      case "calendar":
+        return "red";
+      default:
+        return "yellow";
+    }
+  };
+
   useEffect(() => {
     const workEvents = workPeriods.map((wp) => {
       return {
@@ -33,7 +48,7 @@ const Kalendar = (props) => {
         endAt: new Date(Number(wp.endTime) * 1000).toISOString(),
         timezoneStartAt: "Europe/Berlin", // optional
         summary: wp.ticker,
-        color: "blue",
+        color: getEventColor(wp.type),
         calendarID: "work",
       };
     });
