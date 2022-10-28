@@ -6,11 +6,14 @@ import {
   replaceShortBreakPeriods,
   groupShortWorkPeriods,
   parseWorkPeriods,
+  mergeCloseWorkPeriods,
 } from "./workPeriod";
 
 export const parse = () => {
   const logPeriods = parseLogPeriods();
-  const workPeriods = parseWorkPeriods(replaceShortBreakPeriods(logPeriods));
+  const workPeriods = mergeCloseWorkPeriods(
+    parseWorkPeriods(replaceShortBreakPeriods(logPeriods))
+  );
   const addedWorkPeriods = addPercentageToWorkPeriods(
     groupShortWorkPeriods(workPeriods),
     0.15
@@ -20,7 +23,7 @@ export const parse = () => {
     aggregatedAddedWorkPeriods
   );
   saveUtilWorkPeriodsToJson(flooredWorkPeriods);
-  saveWorkPeriodsToJson(workPeriods);
+  saveWorkPeriodsToJson(flooredWorkPeriods);
   return flooredWorkPeriods;
 };
 

@@ -63,6 +63,37 @@ export const replaceShortBreakPeriods = (
   });
 };
 
+export const mergeCloseWorkPeriods = (
+  workPeriods: WorkPeriod[]
+): WorkPeriod[] => {
+  const toBeMerged: WorkPeriod[][] = [];
+  let wpGroup: WorkPeriod[] = [{ ...workPeriods[0] }];
+  let previousWp: WorkPeriod = { ...workPeriods[0] };
+  workPeriods.slice(1).forEach((wp) => {
+    if (
+      getPeriodLength(wp.startTime, wp.endTime) > 5 * 60 && // merge only periods longer than 5 min
+      getPeriodLength(previousWp.endTime, wp.startTime) < 5 * 60 &&
+      previousWp.ticker === wp.ticker
+    ) {
+      wpGroup.push(wp);
+    } else {
+      toBeMerged.push([...wpGroup]);
+      wpGroup = [{ ...wp }];
+    }
+    previousWp = { ...wp };
+  });
+
+  return toBeMerged.flatMap((wps) => {
+    const firstLog = wps[0];
+    const lastLog = wps[wps.length - 1];
+    const mergedLog: WorkPeriod = {
+      ...firstLog,
+      endTime: lastLog.endTime,
+    };
+    return mergedLog;
+  });
+};
+
 export const groupShortWorkPeriods = (workPeriods: WorkPeriod[]) => {
   // group work logs by day
   const dayGroupedWorkPeriods = Object.values(
