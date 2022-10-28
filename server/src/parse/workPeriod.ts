@@ -2,7 +2,11 @@ import _ from "lodash";
 import { MINIMAL_WORK_PERIOD_LENGTH } from "../constants";
 import { getTimeSpentByTicker } from "../stats/utils";
 import { LogPeriod, WorkPeriod } from "./types";
-import { getDayFromTime, getWorkPeriodDuration } from "./utils";
+import {
+  getDayFromTime,
+  getPeriodLength,
+  getWorkPeriodDuration,
+} from "./utils";
 
 const isTicker = (workspaceName: string) => {
   return workspaceName.startsWith("t-") || workspaceName.startsWith("r-");
@@ -24,6 +28,39 @@ export const parseWorkPeriods = (logPeriods: LogPeriod[]): WorkPeriod[] => {
       endTime,
       ...parseTicker(workspaceName),
     }));
+};
+
+// takes pauses between work periods which are shorter than 5 minutes and converts them to work periods
+export const replaceShortBreakPeriods = (
+  logPeriods: LogPeriod[]
+): LogPeriod[] => {
+  const convertedLogPeriods: LogPeriod[] = [];
+  logPeriods.forEach((lp, i, lps) => {
+    if (i > 0) {
+      const isWorkPeriod = isTicker(lp.workspaceName);
+      if (isWorkPeriod) {
+        const previousPeriod = lps[i - 1];
+        const isWorkPeriod2 = isTicker(previousPeriod.workspaceName);
+        if (!isWorkPeriod2) {
+          if (
+            getPeriodLength(previousPeriod.startTime, previousPeriod.endTime) <
+            5 * 60 // 5 minutes
+          ) {
+            convertedLogPeriods.push({
+              ...previousPeriod,
+              workspaceName: lp.workspaceName,
+            });
+          }
+        }
+      }
+    }
+  });
+  return logPeriods.map((lp) => {
+    const matchingLogPeriod = convertedLogPeriods.find(
+      (clp) => clp.startTime === lp.startTime && clp.endTime === lp.endTime
+    );
+    return matchingLogPeriod || lp;
+  });
 };
 
 export const groupShortWorkPeriods = (workPeriods: WorkPeriod[]) => {

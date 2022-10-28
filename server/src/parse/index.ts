@@ -3,13 +3,14 @@ import { parseLogPeriods } from "./logPeriod";
 import { floorWorkPeriodsToMinute } from "./utils";
 import {
   addPercentageToWorkPeriods,
+  replaceShortBreakPeriods,
   groupShortWorkPeriods,
   parseWorkPeriods,
 } from "./workPeriod";
 
 export const parse = () => {
   const logPeriods = parseLogPeriods();
-  const workPeriods = parseWorkPeriods(logPeriods);
+  const workPeriods = parseWorkPeriods(replaceShortBreakPeriods(logPeriods));
   const addedWorkPeriods = addPercentageToWorkPeriods(
     groupShortWorkPeriods(workPeriods),
     0.15
@@ -19,7 +20,7 @@ export const parse = () => {
     aggregatedAddedWorkPeriods
   );
   saveUtilWorkPeriodsToJson(flooredWorkPeriods);
-  saveWorkPeriodsToJson(flooredWorkPeriods);
+  saveWorkPeriodsToJson(workPeriods);
   return flooredWorkPeriods;
 };
 
