@@ -1,9 +1,19 @@
 import React, { useEffect, useState } from "react";
-import Kalend, { CalendarEvent, CalendarView } from "kalend";
+import Kalend, { CalendarEvent, CalendarView, CALENDAR_VIEW } from "kalend";
 import "kalend/dist/styles/index.css";
-import workPeriods from "../work_periods.json";
+import { WorkPeriod } from "../utils/logParser/types";
 
-const Kalendar = (props) => {
+const Kalendar = ({
+  workPeriods,
+  kalendRef,
+  onStateChange,
+  selectedView,
+}: {
+  workPeriods: WorkPeriod[];
+  kalendRef?: unknown;
+  onStateChange?: unknown;
+  selectedView?: CALENDAR_VIEW | undefined;
+}) => {
   const [events, setEvents] = useState<unknown[]>([]);
 
   const onNewEventClick = (data) => {
@@ -47,25 +57,25 @@ const Kalendar = (props) => {
         startAt: new Date(Number(wp.startTime) * 1000).toISOString(),
         endAt: new Date(Number(wp.endTime) * 1000).toISOString(),
         timezoneStartAt: "Europe/Berlin", // optional
-        summary: wp.ticker,
+        summary: wp.description,
         color: getEventColor(wp.type),
         calendarID: "work",
       };
     });
     setEvents(workEvents);
-  }, []);
+  }, [workPeriods]);
 
-  console.log("shakalaka", props.events, events);
+  console.log("shakalaka", workPeriods, events);
 
   return (
     <div style={{ height: "1600px" }}>
       <Kalend
-        kalendRef={props.kalendRef}
+        kalendRef={kalendRef}
         onNewEventClick={onNewEventClick}
         initialView={CalendarView.WEEK}
         disabledViews={[]}
         onEventClick={onEventClick}
-        events={[...events, ...props.events] as unknown as CalendarEvent[]}
+        events={events as unknown as CalendarEvent[]}
         initialDate={new Date().toISOString()}
         hourHeight={60}
         showWeekNumbers={true}
@@ -76,8 +86,8 @@ const Kalendar = (props) => {
         //   color: 'pink',
         // }}
         onEventDragFinish={onEventDragFinish}
-        onStateChange={props.onStateChange}
-        selectedView={props.selectedView}
+        onStateChange={onStateChange}
+        selectedView={selectedView}
         showTimeLine={true}
         isDark={false}
         autoScroll={true}

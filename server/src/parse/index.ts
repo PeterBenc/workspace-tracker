@@ -14,17 +14,17 @@ export const parse = () => {
   const workPeriods = mergeCloseWorkPeriods(
     parseWorkPeriods(replaceShortBreakPeriods(logPeriods))
   );
-  const addedWorkPeriods = addPercentageToWorkPeriods(
-    groupShortWorkPeriods(workPeriods),
-    0.15
-  );
-  const aggregatedAddedWorkPeriods = groupShortWorkPeriods(addedWorkPeriods);
-  const flooredWorkPeriods = floorWorkPeriodsToMinute(
-    aggregatedAddedWorkPeriods
-  );
-  saveUtilWorkPeriodsToJson(flooredWorkPeriods);
-  saveWorkPeriodsToJson(flooredWorkPeriods);
-  return flooredWorkPeriods;
+  // const addedWorkPeriods = addPercentageToWorkPeriods(
+  //   groupShortWorkPeriods(workPeriods),
+  //   0.15
+  // );
+  // const aggregatedAddedWorkPeriods = groupShortWorkPeriods(addedWorkPeriods);
+  // const flooredWorkPeriods = floorWorkPeriodsToMinute(
+  //   aggregatedAddedWorkPeriods
+  // );
+  // saveUtilWorkPeriodsToJson(flooredWorkPeriods);
+  saveWorkPeriodsToJson(workPeriods);
+  return workPeriods;
 };
 
 parse();

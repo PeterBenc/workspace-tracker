@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import "kalend/dist/styles/index.css";
 import { googleCalendar } from "./utils/googleCalendar";
 import Kalendar from "./components/kalendar";
+import { WorkPeriod } from "./utils/logParser/types";
 
 const App = (props) => {
-  const [events, setEvents] = useState<unknown[]>([]);
+  const [events, setEvents] = useState<WorkPeriod[]>([]);
   const [shouldTry, setShouldTry] = useState<boolean>(false);
   const [count, setCount] = useState(0);
 
@@ -35,7 +36,7 @@ const App = (props) => {
   return (
     <div style={{ height: "1600px" }}>
       {events.length > 0 ? (
-        <Kalendar events={events} />
+        <Kalendar workPeriods={events} />
       ) : (
         <button onClick={handleAuth}>Login</button>
       )}

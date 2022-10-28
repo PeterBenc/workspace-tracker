@@ -1,9 +1,9 @@
-import { CalendarEvent } from "kalend";
+import { WorkPeriod } from "../logParser/types";
 import { GoogleCalendarEvent } from "./types";
 
 export const parseGoogleCalendarEvents = (
   events: GoogleCalendarEvent[]
-): CalendarEvent[] => {
+): WorkPeriod[] => {
   return events
     .filter((e) => e.end.dateTime && e.start.dateTime)
     .filter((e) => {
@@ -20,25 +20,19 @@ export const parseGoogleCalendarEvents = (
       return {
         ...e,
         summary: `${e.summary} (${taskInDescription || taskInName})`,
+        id: taskInDescription || taskInName || "",
       };
-    })
-    .map((e) => {
-      console.log(e);
-      console.log(e.summary, e.description);
-      return {
-        id: e.id,
-        // startAt: e.start.dateTime,
-        // endAt: e.end.dateTime,
-        startAt: new Date(e.start.dateTime).toISOString(),
-        endAt: new Date(e.end.dateTime).toISOString(),
-        timezoneStartAt: "Europe/Berlin", // optional
-        timezoneEndAt: "Europe/Berlin",
-        summary: e.summary,
-        color: "red",
-        calendarID: "work",
-      } as CalendarEvent;
     })
     .filter((e) => {
       return !!e.summary.match(/[A-Z]{2,5}-[0-9]{1,5}/);
+    })
+    .map((e) => {
+      return {
+        endTime: Math.floor(new Date(e.end.dateTime).getTime() / 1000),
+        startTime: Math.floor(new Date(e.start.dateTime).getTime() / 1000),
+        description: e.summary,
+        ticker: e.id,
+        type: "calendar",
+      } as WorkPeriod;
     });
 };

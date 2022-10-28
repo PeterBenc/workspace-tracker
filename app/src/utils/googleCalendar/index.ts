@@ -2,6 +2,7 @@ import { REACT_APP_CALENDAR_ID, REACT_APP_GOOGLE_API_KEY } from "./constants";
 import ApiCalendar from "react-google-calendar-api";
 import { GoogleCalendarEvent } from "./types";
 import { parseGoogleCalendarEvents } from "./utils";
+import { WorkPeriod } from "../logParser/types";
 
 const config = {
   clientId:
@@ -15,7 +16,7 @@ const config = {
 
 const apiCalendar = new ApiCalendar(config);
 
-const listEvents = (): GoogleCalendarEvent[] => {
+const listEvents = (): WorkPeriod[] => {
   const timeMin = new Date();
   timeMin.setDate(1);
   timeMin.setUTCHours(0, 0, 0);
@@ -34,7 +35,6 @@ const listEvents = (): GoogleCalendarEvent[] => {
       maxResults: 500,
       singleEvents: true,
       orderBy: "startTime",
-      // orderBy: "startTime",
     })
     .then(({ result }) => result.items as GoogleCalendarEvent[])
     .then((items: GoogleCalendarEvent[]) => parseGoogleCalendarEvents(items));
