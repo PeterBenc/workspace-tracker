@@ -14,9 +14,11 @@ const isTicker = (workspaceName: string) => {
 
 const parseTicker = (workspaceName: string) => {
   const [type, id, ticker] = workspaceName.split("-");
+  const jiraTickerId = `${ticker || "ADLT"}-${id}`;
   return {
-    ticker: `${ticker || "ADLT"}-${id}`,
-    description: type === "r" ? "review" : "dev",
+    ticker: jiraTickerId,
+    description:
+      type === "r" ? `Review (${jiraTickerId})` : `Dev (${jiraTickerId})`,
   };
 };
 

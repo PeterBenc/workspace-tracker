@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import "kalend/dist/styles/index.css";
 import { googleCalendar } from "./utils/googleCalendar";
 import Kalendar from "./components/kalendar";
 import { WorkPeriod } from "./utils/logParser/types";
+import { parseWorkPeriods } from "./utils/logParser";
 
 const App = (props) => {
   const [events, setEvents] = useState<WorkPeriod[]>([]);
@@ -17,7 +18,6 @@ const App = (props) => {
   const getEvents = async () => {
     try {
       const events = await googleCalendar.listEvents();
-      console.log(events);
       setEvents(events);
       setShouldTry(false);
     } catch (e) {}
@@ -33,10 +33,12 @@ const App = (props) => {
     return () => clearTimeout(timer);
   }, [shouldTry, count]);
 
+  const workPeriods = useMemo(() => parseWorkPeriods(), []);
+
   return (
     <div style={{ height: "1600px" }}>
       {events.length > 0 ? (
-        <Kalendar workPeriods={events} />
+        <Kalendar workPeriods={[...workPeriods, ...events]} />
       ) : (
         <button onClick={handleAuth}>Login</button>
       )}
