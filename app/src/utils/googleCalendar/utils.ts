@@ -20,7 +20,7 @@ export const parseGoogleCalendarEvents = (
       return {
         ...e,
         summary: `${e.summary} (${taskInDescription || taskInName})`,
-        id: taskInDescription || taskInName || "",
+        id: taskInDescription || taskInName || [""],
       };
     })
     .filter((e) => {
@@ -30,8 +30,8 @@ export const parseGoogleCalendarEvents = (
       return {
         endTime: Math.floor(new Date(e.end.dateTime).getTime() / 1000),
         startTime: Math.floor(new Date(e.start.dateTime).getTime() / 1000),
-        description: e.summary,
-        ticker: e.id,
+        description: "calendar",
+        ticker: e.id[0],
         type: "calendar",
       } as WorkPeriod;
     });

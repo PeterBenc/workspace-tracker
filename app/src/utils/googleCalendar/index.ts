@@ -22,7 +22,7 @@ const listEvents = (): WorkPeriod[] => {
   timeMin.setUTCHours(0, 0, 0);
   const timeMax = new Date();
   const currentMonth = new Date().getMonth();
-  const nextMonth = currentMonth === 12 ? 1 : currentMonth + 1;
+  const nextMonth = currentMonth === 11 ? 0 : currentMonth + 1;
   timeMax.setMonth(nextMonth);
   timeMax.setDate(1);
   timeMax.setUTCHours(0, 0, 0);

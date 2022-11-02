@@ -15,5 +15,7 @@ export const parseWorkPeriods = () => {
   const flooredWorkPeriods = floorWorkPeriodsToMinute(
     aggregatedAddedWorkPeriods
   );
-  return flooredWorkPeriods;
+  return flooredWorkPeriods.filter(
+    (wp) => new Date(wp.startTime * 1000).getMonth() === new Date().getMonth()
+  );
 };
