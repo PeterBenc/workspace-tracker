@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import Kalend, { CalendarEvent, CalendarView, CALENDAR_VIEW } from "kalend";
 import "kalend/dist/styles/index.css";
 import { WorkPeriod } from "../utils/logParser/types";
+import { workPeriodToFinetrackerWorklog } from "../utils/fineTrackerSubmiter";
+import _ from "lodash";
 
 const Kalendar = ({
   workPeriods,
@@ -60,12 +62,16 @@ const Kalendar = ({
         summary: wp.description,
         color: getEventColor(wp.type),
         calendarID: "work",
+        ticker: wp.ticker,
       };
     });
+    console.log(
+      _.sortBy(workPeriods, (wp) => wp.startTime)
+        .slice(1)
+        .map((wp, i) => JSON.stringify(workPeriodToFinetrackerWorklog(i, wp)))
+    );
     setEvents(workEvents);
   }, [workPeriods]);
-
-  console.log("shakalaka", workPeriods, events);
 
   return (
     <div style={{ height: "1600px" }}>
