@@ -73,7 +73,7 @@ export const mergeCloseWorkPeriods = (
   workPeriods.slice(1).forEach((wp) => {
     if (
       getPeriodLength(wp.startTime, wp.endTime) > 5 * 60 && // merge only periods longer than 5 min
-      getPeriodLength(previousWp.endTime, wp.startTime) < 5 * 60 &&
+      getPeriodLength(previousWp.endTime, wp.startTime) < 5 * 60 && // merge only if the gap is less than 5 min
       previousWp.ticker === wp.ticker
     ) {
       wpGroup.push(wp);
@@ -104,6 +104,8 @@ export const groupShortWorkPeriods = (workPeriods: WorkPeriod[]) => {
     const longDayWorkPeriods = wp.filter(
       (p) => getWorkPeriodDuration(p) >= MINIMAL_WORK_PERIOD_LENGTH
     );
+
+    // get free slots (lets say between 9 and 19)
     const shortDayWorkPeriods = wp.filter(
       (p) => getWorkPeriodDuration(p) < MINIMAL_WORK_PERIOD_LENGTH
     );
@@ -201,6 +203,9 @@ export const addPercentageToWorkPeriods = (
   workPeriods: WorkPeriod[],
   coefficient: number
 ) => {
+  // exclude calendar
+  // try distributing it gracefuully, look for the same issue in all days and try extending them
+  // then get free slots
   const timeSpentByTicker = getTimeSpentByTicker(workPeriods);
   const addedTimeByTicker = timeSpentByTicker.map(
     ({ ticker, timeStat, description }) => {
