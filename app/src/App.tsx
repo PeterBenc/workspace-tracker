@@ -3,10 +3,12 @@ import "kalend/dist/styles/index.css";
 import { googleCalendar } from "./utils/googleCalendar";
 import Kalendar from "./components/kalendar";
 import { WorkPeriod } from "./utils/logParser/types";
-import { parseWorkPeriods } from "./utils/logParser";
+import { parseLogs } from "./utils/logParser";
 
 const App = (props) => {
   const [events, setEvents] = useState<WorkPeriod[]>([]);
+  const [workPeriods, setWorkPeriods] = useState<WorkPeriod[]>([]);
+
   const [shouldTry, setShouldTry] = useState<boolean>(false);
   const [count, setCount] = useState(0);
 
@@ -23,7 +25,18 @@ const App = (props) => {
     } catch (e) {}
   };
 
+  const getWorkPeriods = async () => {
+    try {
+      const workPeriods = await parseLogs();
+      setWorkPeriods(workPeriods);
+    } catch (e) {}
+  };
+
   useEffect(() => {
+    if (workPeriods.length === 0) {
+      // TODO: check here if its | null,
+      getWorkPeriods();
+    }
     const timer = setTimeout(() => {
       if (shouldTry) {
         getEvents();
@@ -31,13 +44,11 @@ const App = (props) => {
       }
     }, 1000);
     return () => clearTimeout(timer);
-  }, [shouldTry, count]);
-
-  const workPeriods = useMemo(() => parseWorkPeriods(), []);
+  }, [shouldTry, count, workPeriods]);
 
   return (
     <div style={{ height: "1600px" }}>
-      {events.length > 0 ? (
+      {true ? ( // TODO:
         <Kalendar workPeriods={[...workPeriods, ...events]} />
       ) : (
         <button onClick={handleAuth}>Login</button>

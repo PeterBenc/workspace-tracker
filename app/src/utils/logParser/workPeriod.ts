@@ -32,7 +32,7 @@ export const parseWorkPeriods = (logPeriods: LogPeriod[]): WorkPeriod[] => {
 };
 
 /**
- * takes pauses between work periods which are shorter than 5 minutes and converts them to work periods
+ * takes pauses between work periods which are shorter than MAX_WORK_PERIOD_BREAK and converts them to work periods
  * @param logPeriods
  * @param MAX_WORK_PERIOD_BREAK max time in seconds for non-working log period to become work period
  * @returns log periods with some of them replaced with work periods in case they were short enough

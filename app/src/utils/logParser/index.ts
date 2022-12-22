@@ -2,11 +2,32 @@ import { floorWorkPeriodsToMinute } from "./utils";
 import {
   addPercentageToWorkPeriods,
   groupShortWorkPeriods,
+  mergeCloseWorkPeriods,
+  parseWorkPeriods,
+  replaceShortBreakPeriods,
 } from "./workPeriod";
-import workPeriods from "../../work_periods.json";
 import { WorkPeriod } from "./types";
+import { parseLogPeriods } from "./logPeriod";
+import {
+  MERGE_MINIMAL_WORK_PERIOD_LENGTH,
+  MERGE_MAX_WORK_PERIOD_BREAK,
+} from "./constants";
+// @ts-ignore
+import logs_copy from "../../logs_copy.txt";
 
-export const parseWorkPeriods = () => {
+const getLogPeriods = async (): Promise<string> => {
+  return fetch(logs_copy).then((r) => r.text());
+};
+
+export const parseLogs = async () => {
+  const logPeriods = parseLogPeriods(await getLogPeriods());
+  const workPeriods = mergeCloseWorkPeriods(
+    parseWorkPeriods(
+      replaceShortBreakPeriods(logPeriods, MERGE_MAX_WORK_PERIOD_BREAK)
+    ),
+    MERGE_MINIMAL_WORK_PERIOD_LENGTH,
+    MERGE_MAX_WORK_PERIOD_BREAK
+  );
   const addedWorkPeriods = addPercentageToWorkPeriods(
     groupShortWorkPeriods(workPeriods as WorkPeriod[]),
     0.15

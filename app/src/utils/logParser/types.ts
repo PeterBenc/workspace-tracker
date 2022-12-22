@@ -17,3 +17,8 @@ export type LogTimeStat = {
   minutes: number;
   seconds: number;
 };
+
+export type WorkspaceLog = {
+  time: string;
+  workspaceName: string;
+};

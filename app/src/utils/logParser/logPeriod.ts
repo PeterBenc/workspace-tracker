@@ -1,13 +1,9 @@
-import fs from "fs";
-import _ from "lodash";
-import { LOG_INTERVAL, LOG_PARSE_FILE_PATH } from "../constants";
-import { WorkspaceLog } from "../types";
+import { LOG_INTERVAL } from "./constants";
+import { WorkspaceLog } from "./types";
 import { LogPeriod } from "./types";
 
-export const parseLogPeriods = (): LogPeriod[] => {
-  const logs: WorkspaceLog[] = fs
-    .readFileSync(LOG_PARSE_FILE_PATH)
-    .toString()
+export const parseLogPeriods = (logsString: string): LogPeriod[] => {
+  const logs: WorkspaceLog[] = logsString
     .split("\n")
     .map((l) => {
       const log = l.split(": ");
