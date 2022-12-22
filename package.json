@@ -2,7 +2,9 @@
   "private": true,
   "workspaces": [
     "server",
-    "app"
+    "app",
+    "common",
+    "service"
   ],
   "scripts": {
     "service:setup": "sh ./scripts/setup_service.sh",
