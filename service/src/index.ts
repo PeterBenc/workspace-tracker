@@ -10,6 +10,6 @@ app.listen(PORT, async () => {
   try {
     await workspaceLogger.logWorkspaces();
   } catch (e) {
-    process.exit();
+    process.exit(1);
   }
 });

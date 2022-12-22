@@ -8,7 +8,7 @@ ExecStartPre=/bin/sleep 240
 Environment=NODE_PORT=1000
 Type=simple
 User=peter
-ExecStart=/usr/bin/node /home/peter/Me/workspace-tracker/server/dist/index.js
+ExecStart=/usr/bin/node /home/peter/Me/workspace-tracker/service/dist/index.js
 Restart=on-failure
 TimeoutSec=900
 

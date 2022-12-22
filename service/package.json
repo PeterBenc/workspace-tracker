@@ -4,7 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "npx tsc && node dist/index.js"
+    "build": "npx tsc",
+    "dev": "yarn build && node dist/index.js",
+    "service:setup": "sh ./scripts/setup_service.sh",
+    "service:start": "yarn build && sh ./scripts/restart_service.sh",
+    "service:install": "touch logs.txt && yarn service:setup",
+    "service:status": "./scripts/get_service_status.sh "
   },
   "keywords": [],
   "author": "",
