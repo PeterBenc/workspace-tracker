@@ -31,9 +31,15 @@ export const parseWorkPeriods = (logPeriods: LogPeriod[]): WorkPeriod[] => {
     }));
 };
 
-// takes pauses between work periods which are shorter than 5 minutes and converts them to work periods
+/**
+ * takes pauses between work periods which are shorter than 5 minutes and converts them to work periods
+ * @param logPeriods
+ * @param MAX_WORK_PERIOD_BREAK max time in seconds for non-working log period to become work period
+ * @returns log periods with some of them replaced with work periods in case they were short enough
+ */
 export const replaceShortBreakPeriods = (
-  logPeriods: LogPeriod[]
+  logPeriods: LogPeriod[],
+  MAX_WORK_PERIOD_BREAK: number
 ): LogPeriod[] => {
   const convertedLogPeriods: LogPeriod[] = [];
   logPeriods.forEach((lp, i, lps) => {
@@ -45,7 +51,7 @@ export const replaceShortBreakPeriods = (
         if (!isWorkPeriod2) {
           if (
             getPeriodLength(previousPeriod.startTime, previousPeriod.endTime) <
-            5 * 60 // 5 minutes
+            MAX_WORK_PERIOD_BREAK
           ) {
             convertedLogPeriods.push({
               ...previousPeriod,
@@ -64,16 +70,27 @@ export const replaceShortBreakPeriods = (
   });
 };
 
+/**
+ * takes all work periods, and merges neighboring work periods in case they are close enough, long enough and hav the same jira id
+ * @param workPeriods
+ * @param MIN_WORK_PERIOD_LENGTH minimal length of work periods in seconds that can be merged
+ * @param MAX_WORK_PERIOD_BREAK  max length of break between work periods for them to be merged
+ * @returns merged work periods
+ */
+
 export const mergeCloseWorkPeriods = (
-  workPeriods: WorkPeriod[]
+  workPeriods: WorkPeriod[],
+  MIN_WORK_PERIOD_LENGTH: number,
+  MAX_WORK_PERIOD_BREAK: number
 ): WorkPeriod[] => {
   const toBeMerged: WorkPeriod[][] = [];
   let wpGroup: WorkPeriod[] = [{ ...workPeriods[0] }];
   let previousWp: WorkPeriod = { ...workPeriods[0] };
   workPeriods.slice(1).forEach((wp) => {
     if (
-      getPeriodLength(wp.startTime, wp.endTime) > 5 * 60 && // merge only periods longer than 5 min
-      getPeriodLength(previousWp.endTime, wp.startTime) < 5 * 60 && // merge only if the gap is less than 5 min
+      getPeriodLength(wp.startTime, wp.endTime) > MIN_WORK_PERIOD_LENGTH &&
+      getPeriodLength(previousWp.endTime, wp.startTime) <
+        MAX_WORK_PERIOD_BREAK &&
       previousWp.ticker === wp.ticker
     ) {
       wpGroup.push(wp);
@@ -104,8 +121,6 @@ export const groupShortWorkPeriods = (workPeriods: WorkPeriod[]) => {
     const longDayWorkPeriods = wp.filter(
       (p) => getWorkPeriodDuration(p) >= MINIMAL_WORK_PERIOD_LENGTH
     );
-
-    // get free slots (lets say between 9 and 19)
     const shortDayWorkPeriods = wp.filter(
       (p) => getWorkPeriodDuration(p) < MINIMAL_WORK_PERIOD_LENGTH
     );
@@ -203,9 +218,6 @@ export const addPercentageToWorkPeriods = (
   workPeriods: WorkPeriod[],
   coefficient: number
 ) => {
-  // exclude calendar
-  // try distributing it gracefuully, look for the same issue in all days and try extending them
-  // then get free slots
   const timeSpentByTicker = getTimeSpentByTicker(workPeriods);
   const addedTimeByTicker = timeSpentByTicker.map(
     ({ ticker, timeStat, description }) => {

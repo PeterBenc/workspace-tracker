@@ -1,3 +1,4 @@
+// how often get current workspace (in milliseconds)
 export const LOG_INTERVAL = 30000;
 
 // how many logs before updating the log file
