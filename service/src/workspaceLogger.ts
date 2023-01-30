@@ -6,6 +6,17 @@ import { LOG_FILE_PATH } from "./constants";
 import { execSync } from "child_process";
 
 export class WorkspaceLogger implements IWorkspaceLogger {
+  public shouldLog = () => {
+    try {
+      // check if the screen saver is turned on, if yes, do not log
+      return execSync("gnome-screensaver-command -q")
+        .toString()
+        .startsWith("The screensaver is inactive");
+    } catch (e) {
+      return true;
+    }
+  };
+
   public getCurrentWorkspace = (): WorkspaceLog => {
     const workspaceNames = JSON.parse(
       `${execSync(
@@ -39,7 +50,9 @@ export class WorkspaceLogger implements IWorkspaceLogger {
   public logWorkspaces = async (): Promise<void> => {
     let workspaceLogs: WorkspaceLog[] = [];
     while (true) {
-      workspaceLogs.push(this.getCurrentWorkspace());
+      if (this.shouldLog()) {
+        workspaceLogs.push(this.getCurrentWorkspace());
+      }
       if (workspaceLogs.length === LOG_BATCH_SIZE) {
         this.appendToLogFile(workspaceLogs);
         workspaceLogs = [];
