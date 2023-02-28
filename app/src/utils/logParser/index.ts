@@ -19,6 +19,14 @@ const getLogPeriods = async (): Promise<string> => {
   return fetch(logs_copy).then((r) => r.text());
 };
 
+// TODO: design a pattern for logs transformations, maybe
+// it could be recursion of sorts, we could in theory define transformations in array and
+// then just call all of them on the initial log string
+// these transformations are kind of arbitrary, so there should be a easy way to reshuffle them
+// maybe each transformation should return {type: 'some_name', data: TData, transform: () => ReturnType<TNextTransformFn>}
+// maybe, anyway, the problem is that the current transformations are quite messy and it it quite hard
+// to know what they actually do with the data and in which order they should be called
+
 export const parseLogs = async () => {
   const logPeriods = parseLogPeriods(await getLogPeriods());
   const workPeriods = mergeCloseWorkPeriods(
