@@ -27,8 +27,13 @@ const getLogPeriods = async (): Promise<string> => {
 // maybe, anyway, the problem is that the current transformations are quite messy and it it quite hard
 // to know what they actually do with the data and in which order they should be called
 
+// TODO: restart service every day, this what ever happens with it, it should work, or lets say
+// restart it every day after logging in ( this will be harder to do tho)
+
 export const parseLogs = async () => {
-  const logPeriods = parseLogPeriods(await getLogPeriods());
+  const logPeriods = parseLogPeriods(await getLogPeriods()).filter(
+    (lp) => new Date(lp.startTime * 1000).getMonth() === new Date().getMonth()
+  );
   const workPeriods = mergeCloseWorkPeriods(
     parseWorkPeriods(
       replaceShortBreakPeriods(logPeriods, MERGE_MAX_WORK_PERIOD_BREAK)
@@ -44,7 +49,5 @@ export const parseLogs = async () => {
   const flooredWorkPeriods = floorWorkPeriodsToMinute(
     aggregatedAddedWorkPeriods
   );
-  return flooredWorkPeriods.filter(
-    (wp) => new Date(wp.startTime * 1000).getMonth() === new Date().getMonth()
-  );
+  return flooredWorkPeriods;
 };
