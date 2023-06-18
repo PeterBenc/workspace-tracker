@@ -15,7 +15,7 @@ const getStats = () => {
       })
     ) as WorkPeriod[]
   ).filter(
-    (wp) => new Date().getMonth() === new Date(wp.endTime * 1000).getMonth()
+    (wp) => new Date().getMonth() - 1 === new Date(wp.endTime * 1000).getMonth()
   );
   const mode = process.argv[2];
   switch (mode) {
