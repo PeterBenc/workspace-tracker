@@ -6,7 +6,6 @@ import {
   parseWorkPeriods,
   replaceShortBreakPeriods,
 } from "./workPeriod";
-import { WorkPeriod } from "./types";
 import { parseLogPeriods } from "./logPeriod";
 import {
   MERGE_MINIMAL_WORK_PERIOD_LENGTH,
@@ -42,7 +41,7 @@ export const parseLogs = async () => {
     MERGE_MAX_WORK_PERIOD_BREAK
   );
   const addedWorkPeriods = addPercentageToWorkPeriods(
-    groupShortWorkPeriods(workPeriods as WorkPeriod[]),
+    groupShortWorkPeriods(workPeriods),
     0.15
   );
   const aggregatedAddedWorkPeriods = groupShortWorkPeriods(addedWorkPeriods);
