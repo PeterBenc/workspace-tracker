@@ -16,7 +16,7 @@ export class WorkspaceLogger implements IWorkspaceLogger {
     ) as string[];
     const workspaceIndex = Number(
       execSync(
-        "export DISPLAY=:0 && export XAUTHORITY=/run/user/1000/.mutter-Xwaylandauth.HNE461 && xdotool get_desktop"
+        `export DISPLAY=:0 && export XAUTHORITY="/run/user/1000/$(ls /run/user/1000/ -a | grep ".mutter")" && xdotool get_desktop`
       ).toString()
     );
     return {
