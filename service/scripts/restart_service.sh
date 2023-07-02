@@ -6,6 +6,6 @@ npx tsc
 echo "Service rebuilding"
 sudo systemctl daemon-reload
 echo "Deamon reloaded"
-sudo systemctl start workspace_tracker
+sudo sudo systemctl start workspace_tracker
 sudo systemctl enable workspace_tracker
 echo "DONE: Service restarted"
